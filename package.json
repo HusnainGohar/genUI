@@ -1,0 +1,33 @@
+{
+  "name": "genui-cb",
+  "version": "1.0.0",
+  "description": "WCAG 2.2 AA Color Contrast Utility and Accessibility Tools",
+  "type": "module",
+  "main": "src/a11y/contrast.ts",
+  "scripts": {
+    "test": "vitest",
+    "test:run": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "build": "tsc",
+    "dev": "vitest --watch"
+  },
+  "keywords": [
+    "accessibility",
+    "wcag",
+    "color-contrast",
+    "a11y",
+    "typescript"
+  ],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.0.0",
+    "typescript": "^5.0.0",
+    "vitest": "^1.0.0",
+    "@vitest/coverage-v8": "^1.0.0"
+  },
+  "files": [
+    "src/**/*",
+    "dist/**/*"
+  ]
+}
