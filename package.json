@@ -9,7 +9,10 @@
     "test:run": "vitest run",
     "test:coverage": "vitest run --coverage",
     "build": "tsc",
-    "dev": "vitest --watch"
+    "dev": "vitest --watch",
+    "serve": "npx serve . -p 3000",
+    "a11y:qa": "npm run serve & open http://localhost:3000/a11y/qa",
+    "a11y:screening": "npm run serve & open http://localhost:3000/src/a11y/screening-page.html"
   },
   "keywords": [
     "accessibility",

@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Screening - Personalization</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+            color: #333;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .step {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+        
+        .step.hidden {
+            display: none;
+        }
+        
+        .step-title {
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #2563eb;
+        }
+        
+        .step-description {
+            color: #666;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+        
+        .calibration-grid {
+            display: grid;
+            grid-template-columns: repeat(10, 1fr);
+            gap: 4px;
+            margin: 20px 0;
+        }
+        
+        .calibration-square {
+            aspect-ratio: 1;
+            background: #808080;
+            border-radius: 2px;
+        }
+        
+        .trial-area {
+            position: relative;
+            height: 400px;
+            background: #808080;
+            border-radius: 8px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+        
+        .stimulus {
+            position: absolute;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: opacity 0.1s ease;
+        }
+        
+        .stimulus.hidden {
+            opacity: 0;
+        }
+        
+        .response-buttons {
+            display: flex;
+            gap: 12px;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-primary {
+            background: #2563eb;
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #1d4ed8;
+        }
+        
+        .btn-secondary {
+            background: #6b7280;
+            color: white;
+        }
+        
+        .btn-secondary:hover {
+            background: #4b5563;
+        }
+        
+        .btn:focus {
+            outline: 2px solid #2563eb;
+            outline-offset: 2px;
+        }
+        
+        .progress {
+            margin: 20px 0;
+        }
+        
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        
+        .progress-fill {
+            height: 100%;
+            background: #2563eb;
+            transition: width 0.3s ease;
+        }
+        
+        .progress-text {
+            text-align: center;
+            margin-top: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+        
+        .results {
+            background: #f0f9ff;
+            border: 1px solid #0ea5e9;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 20px;
+        }
+        
+        .results h3 {
+            margin-top: 0;
+            color: #0369a1;
+        }
+        
+        .threshold-results, .profile-results {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            text-align: left;
+        }
+        
+        .threshold-results h4, .profile-results h4 {
+            color: #2563eb;
+            margin: 0 0 15px 0;
+            font-size: 18px;
+        }
+        
+        .threshold-results p, .profile-results p {
+            margin: 8px 0;
+            color: #333;
+        }
+        
+        .keyboard-hint {
+            background: #fef3c7;
+            border: 1px solid #f59e0b;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 16px 0;
+            font-size: 14px;
+        }
+        
+        .keyboard-hint strong {
+            color: #92400e;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Color Vision Screening</h1>
+            <p>Help us personalize your color experience</p>
+        </div>
+        
+        <!-- Calibration Step -->
+        <div id="calibration" class="step">
+            <h2 class="step-title">Screen Calibration</h2>
+            <p class="step-description">
+                Please adjust your screen brightness and contrast so you can see all gray levels clearly.
+                This ensures accurate color testing.
+            </p>
+            
+            <div class="calibration-grid">
+                <div class="calibration-square" style="background: #000000;"></div>
+                <div class="calibration-square" style="background: #1a1a1a;"></div>
+                <div class="calibration-square" style="background: #333333;"></div>
+                <div class="calibration-square" style="background: #4d4d4d;"></div>
+                <div class="calibration-square" style="background: #666666;"></div>
+                <div class="calibration-square" style="background: #808080;"></div>
+                <div class="calibration-square" style="background: #999999;"></div>
+                <div class="calibration-square" style="background: #b3b3b3;"></div>
+                <div class="calibration-square" style="background: #cccccc;"></div>
+                <div class="calibration-square" style="background: #ffffff;"></div>
+            </div>
+            
+            <div class="keyboard-hint">
+                <strong>Keyboard:</strong> Press <kbd>Space</kbd> or <kbd>Enter</kbd> to continue
+            </div>
+            
+            <div class="response-buttons">
+                <button class="btn btn-primary" onclick="completeCalibration()">
+                    I can see all levels clearly
+                </button>
+            </div>
+        </div>
+        
+        <!-- Detection Task -->
+        <div id="detection" class="step hidden">
+            <h2 class="step-title">Color Detection Task</h2>
+            <p class="step-description">
+                A colored patch will appear briefly. Click "Seen" if you notice any color, 
+                or "Not Seen" if it appears gray. The task uses an adaptive staircase that 
+                adjusts difficulty based on your responses to find your detection threshold.
+            </p>
+            
+            <div class="progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="detection-progress"></div>
+                </div>
+                <div class="progress-text" id="detection-progress-text">Trial 1 of 20</div>
+            </div>
+            
+            <div class="trial-area" id="detection-area">
+                <div class="stimulus hidden" id="detection-stimulus"></div>
+            </div>
+            
+            <div class="keyboard-hint">
+                <strong>Keyboard:</strong> Press <kbd>S</kbd> for "Seen" or <kbd>N</kbd> for "Not Seen"
+            </div>
+            
+            <div class="response-buttons">
+                <button class="btn btn-primary" id="seen-btn" onclick="recordDetectionResponse(true)">
+                    Seen
+                </button>
+                <button class="btn btn-secondary" id="not-seen-btn" onclick="recordDetectionResponse(false)">
+                    Not Seen
+                </button>
+            </div>
+        </div>
+        
+        <!-- Discrimination Task -->
+        <div id="discrimination" class="step hidden">
+            <h2 class="step-title">Color Discrimination Task</h2>
+            <p class="step-description">
+                Three colored patches will appear. One is slightly different. 
+                Click on the one that looks different. The task uses a 3-down/1-up 
+                staircase that converges at ~79% accuracy to find your discrimination threshold.
+            </p>
+            
+            <div class="progress">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="discrimination-progress"></div>
+                </div>
+                <div class="progress-text" id="discrimination-progress-text">Trial 1 of 20</div>
+            </div>
+            
+            <div class="trial-area" id="discrimination-area">
+                <div class="stimulus" id="discrimination-stimulus-0"></div>
+                <div class="stimulus" id="discrimination-stimulus-1"></div>
+                <div class="stimulus" id="discrimination-stimulus-2"></div>
+            </div>
+            
+            <div class="keyboard-hint">
+                <strong>Keyboard:</strong> Press <kbd>1</kbd>, <kbd>2</kbd>, or <kbd>3</kbd> to select
+            </div>
+        </div>
+        
+        <!-- Results -->
+        <div id="results" class="step hidden">
+            <h2 class="step-title">Screening Complete</h2>
+            <div class="results">
+                <h3>Your Results</h3>
+                <p id="results-text">Analysis complete. Your color profile has been saved.</p>
+                <button class="btn btn-primary" onclick="startOver()">
+                    Start Over
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script type="module">
+        import { ColorScreeningManager } from './src/a11y/screening-tasks.js';
+        
+        const manager = new ColorScreeningManager();
+        let currentStep = 'calibration';
+        let detectionTrial = 0;
+        let discriminationTrial = 0;
+        const maxTrials = 20;
+        
+        // Keyboard event handling
+        document.addEventListener('keydown', (e) => {
+            if (currentStep === 'calibration' && (e.key === ' ' || e.key === 'Enter')) {
+                e.preventDefault();
+                completeCalibration();
+            } else if (currentStep === 'detection') {
+                if (e.key === 's' || e.key === 'S') {
+                    e.preventDefault();
+                    recordDetectionResponse(true);
+                } else if (e.key === 'n' || e.key === 'N') {
+                    e.preventDefault();
+                    recordDetectionResponse(false);
+                }
+            } else if (currentStep === 'discrimination') {
+                if (e.key === '1') {
+                    e.preventDefault();
+                    recordDiscriminationResponse(0);
+                } else if (e.key === '2') {
+                    e.preventDefault();
+                    recordDiscriminationResponse(1);
+                } else if (e.key === '3') {
+                    e.preventDefault();
+                    recordDiscriminationResponse(2);
+                }
+            }
+        });
+        
+        function showStep(stepId) {
+            document.querySelectorAll('.step').forEach(step => step.classList.add('hidden'));
+            document.getElementById(stepId).classList.remove('hidden');
+            currentStep = stepId;
+        }
+        
+        function completeCalibration() {
+            manager.markCalibrated();
+            showStep('detection');
+            startDetectionTask();
+        }
+        
+        function startDetectionTask() {
+            detectionTrial = 0;
+            startDetectionTrial();
+        }
+        
+        function startDetectionTrial() {
+            const trial = manager.startDetectionTrial();
+            
+            if (!trial) {
+                // Staircase completed
+                manager.completeTask('detection_rg');
+                showStep('discrimination');
+                startDiscriminationTask();
+                return;
+            }
+            
+            const stimulus = document.getElementById('detection-stimulus');
+            stimulus.style.backgroundColor = trial.stimulus.color;
+            stimulus.style.left = trial.stimulus.position.x + 'px';
+            stimulus.style.top = trial.stimulus.position.y + 'px';
+            stimulus.classList.remove('hidden');
+            
+            setTimeout(() => {
+                stimulus.classList.add('hidden');
+            }, trial.stimulus.duration);
+            
+            updateDetectionProgress();
+        }
+        
+        function recordDetectionResponse(seen) {
+            manager.recordDetectionResponse(seen);
+            detectionTrial++;
+            
+            // Check if staircase should stop
+            if (manager.shouldStopDetection()) {
+                manager.completeTask('detection_rg');
+                showStep('discrimination');
+                startDiscriminationTask();
+            } else {
+                setTimeout(startDetectionTrial, 1000);
+            }
+        }
+        
+        function updateDetectionProgress() {
+            const stats = manager.getDetectionStats();
+            if (stats) {
+                const progress = (stats.trialCount / 60) * 100; // Max 60 trials
+                document.getElementById('detection-progress').style.width = Math.min(progress, 100) + '%';
+                document.getElementById('detection-progress-text').textContent = 
+                    `Trial ${stats.trialCount} | Reversals: ${stats.reversalCount} | Level: ${stats.currentLevel.toFixed(3)} | Steps: ↑${stats.stepUp.toFixed(3)} ↓${stats.stepDown.toFixed(3)} | Rule: ${stats.rule.downAfter}-down/${stats.rule.upAfter}-up`;
+            }
+        }
+        
+        function startDiscriminationTask() {
+            discriminationTrial = 0;
+            startDiscriminationTrial();
+        }
+        
+        function startDiscriminationTrial() {
+            const trial = manager.startDiscriminationTrial();
+            
+            if (!trial) {
+                // Staircase completed
+                manager.completeTask('discrimination_yb');
+                showResults();
+                return;
+            }
+            
+            for (let i = 0; i < 3; i++) {
+                const stimulus = document.getElementById(`discrimination-stimulus-${i}`);
+                stimulus.style.backgroundColor = trial.stimuli.colors[i];
+                stimulus.style.left = trial.stimuli.positions[i].x + 'px';
+                stimulus.style.top = trial.stimuli.positions[i].y + 'px';
+                stimulus.onclick = () => recordDiscriminationResponse(i);
+            }
+            
+            updateDiscriminationProgress();
+        }
+        
+        function recordDiscriminationResponse(selectedIndex) {
+            manager.recordDiscriminationResponse(selectedIndex);
+            discriminationTrial++;
+            
+            // Check if staircase should stop
+            if (manager.shouldStopDiscrimination()) {
+                manager.completeTask('discrimination_yb');
+                showResults();
+            } else {
+                setTimeout(startDiscriminationTrial, 1000);
+            }
+        }
+        
+        function updateDiscriminationProgress() {
+            const stats = manager.getDiscriminationStats();
+            if (stats) {
+                const progress = (stats.trialCount / 80) * 100; // Max 80 trials
+                document.getElementById('discrimination-progress').style.width = Math.min(progress, 100) + '%';
+                document.getElementById('discrimination-progress-text').textContent = 
+                    `Trial ${stats.trialCount} | Reversals: ${stats.reversalCount} | Level: ${stats.currentLevel.toFixed(3)} | Steps: ↑${stats.stepUp.toFixed(3)} ↓${stats.stepDown.toFixed(3)} | Rule: ${stats.rule.downAfter}-down/${stats.rule.upAfter}-up`;
+            }
+        }
+        
+        function showResults() {
+            const profile = manager.estimateProfileFromThresholds();
+            manager.saveSession();
+            
+            const detectionThreshold = manager.getDetectionThreshold();
+            const discriminationThreshold = manager.getDiscriminationThreshold();
+            const resultsText = document.getElementById('results-text');
+            
+            resultsText.innerHTML = `
+                <div class="threshold-results">
+                    <h4>Detection Task (1-up/1-down staircase)</h4>
+                    <p><strong>Threshold:</strong> ${detectionThreshold?.threshold.toFixed(3) || 'N/A'}</p>
+                    <p><strong>Reliability:</strong> ${detectionThreshold?.reliability.toFixed(2) || 'N/A'}</p>
+                    <p><strong>Reversals:</strong> ${detectionThreshold?.reversals || 'N/A'}</p>
+                    <p><strong>Lapse Rate:</strong> ${detectionThreshold?.lapseRate.toFixed(2) || 'N/A'}</p>
+                    <p><strong>Converged:</strong> ${detectionThreshold?.convergence ? 'Yes' : 'No'}</p>
+                </div>
+                
+                <div class="threshold-results">
+                    <h4>Discrimination Task (3-down/1-up staircase)</h4>
+                    <p><strong>JND:</strong> ${discriminationThreshold?.threshold.toFixed(3) || 'N/A'}</p>
+                    <p><strong>Reliability:</strong> ${discriminationThreshold?.reliability.toFixed(2) || 'N/A'}</p>
+                    <p><strong>Reversals:</strong> ${discriminationThreshold?.reversals || 'N/A'}</p>
+                    <p><strong>Lapse Rate:</strong> ${discriminationThreshold?.lapseRate.toFixed(2) || 'N/A'}</p>
+                    <p><strong>Converged:</strong> ${discriminationThreshold?.convergence ? 'Yes' : 'No'}</p>
+                </div>
+                
+                <div class="profile-results">
+                    <h4>Estimated Color Profile</h4>
+                    <p><strong>Type:</strong> ${profile?.type || 'none'}</p>
+                    <p><strong>Severity:</strong> ${profile?.severity?.toFixed(2) || '0'}</p>
+                    <p><strong>Overall Reliability:</strong> ${profile?.reliability?.toFixed(2) || '0'}</p>
+                </div>
+            `;
+            
+            showStep('results');
+        }
+        
+        function startOver() {
+            manager.loadSession();
+            showStep('calibration');
+        }
+        
+        // Make functions globally available
+        window.completeCalibration = completeCalibration;
+        window.recordDetectionResponse = recordDetectionResponse;
+        window.recordDiscriminationResponse = recordDiscriminationResponse;
+        window.startOver = startOver;
+    </script>
+</body>
+</html>
